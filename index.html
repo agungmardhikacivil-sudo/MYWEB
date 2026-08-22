@@ -413,6 +413,15 @@
         .article-card h3 { font-size: 20px; font-weight: 500; }
         .article-card .ac-excerpt { font-family: var(--font-body); font-size: 14px; color: var(--ink-2); }
         .article-card .ac-meta { display: flex; justify-content: space-between; font-size: 11px; color: var(--ink-3); border-top: 1px solid var(--line-2); padding-top: 14px; }
+        
+        .ac-cat {
+            font-family: var(--font-mono); font-size: 9px; letter-spacing: .18em; text-transform: uppercase;
+            padding: 4px 10px; border-radius: 100px; white-space: nowrap; display: inline-block;
+        }
+        .cat-civil { color: var(--cyan); background: rgba(34, 211, 238, .12); border: 1px solid rgba(34, 211, 238, .15); }
+        .cat-procurement { color: var(--pink-soft); background: rgba(236, 72, 153, .12); border: 1px solid rgba(236, 72, 153, .15); }
+        .cat-media { color: var(--amber); background: rgba(251, 191, 36, .12); border: 1px solid rgba(251, 191, 36, .15); }
+        .cat-chronicles { color: var(--green); background: rgba(74, 222, 128, .12); border: 1px solid rgba(74, 222, 128, .15); }
 
         /* ----- s-detail ----- */
         .s-detail { padding: 90px 6vmin 80px; }
@@ -420,6 +429,11 @@
         .detail-content { max-width: 820px; margin: 0 auto; width: 100%; }
         .detail-content h1 { font-size: clamp(32px, 4.6vw, 56px); margin: 20px 0 10px; }
         .detail-content .dc-body { font-family: var(--font-body); font-size: 16px; line-height: 1.8; color: var(--ink-2); margin-top: 20px; }
+        
+        /* Tombol share */
+        .share-row { display: flex; gap: 12px; margin-top: 32px; padding-top: 20px; border-top: 1px solid var(--line-2); }
+        .share-btn { padding: 8px 18px; border-radius: 100px; font-family: var(--font-body); font-size: 13px; border: 1px solid var(--glass-border); background: rgba(255, 255, 255, .04); color: var(--ink-2); text-decoration: none; display: inline-flex; }
+        .share-btn:hover { background: rgba(255, 255, 255, .1); color: #fff; }
     </style>
 </head>
 <body>
@@ -464,22 +478,45 @@
             <div class="slide-inner">
                 <div class="header-area reveal">
                     <div class="eyebrow"><span class="dt"></span> Arsip Publikasi</div>
-                    <h2 class="h-display">Kumpulan <span class="grd">Artikel</span></h2>
-                    <input type="text" id="searchInput" class="search-input" placeholder="Cari artikel..." oninput="handleSearch()" />
+                    <h2 class="h-display">Kumpulan <span class="grd">Artikel & Catatan</span></h2>
+                    <input type="text" id="searchInput" class="search-input" placeholder="Cari judul artikel..." oninput="handleSearch()" />
                     <div class="filter-tabs">
                         <button class="ft active" onclick="filterCategory('all', this)">Semua</button>
-                        <button class="ft" onclick="filterCategory('Sipil', this)">Teknik Sipil</button>
-                        <button class="ft" onclick="filterCategory('Catatan', this)">Catatan</button>
+                        <button class="ft" onclick="filterCategory('civil', this)">Teknik Sipil</button>
+                        <button class="ft" onclick="filterCategory('procurement', this)">Pengadaan</button>
+                        <button class="ft" onclick="filterCategory('media', this)">Media & Riset</button>
+                        <button class="ft" onclick="filterCategory('chronicles', this)">Catatan</button>
                     </div>
                 </div>
 
                 <div class="article-grid reveal">
-                    <article class="glass-card article-card" data-category="Sipil" onclick="openArticle(1)">
+                    <!-- Artikel 1 -->
+                    <article class="glass-card article-card" data-category="civil" onclick="openArticle(1)">
+                        <div style="margin-bottom: 8px;"><span class="ac-cat cat-civil">Teknik Sipil</span></div>
                         <h3>Validasi Kapasitas Struktur Menggunakan Pendekatan Model Numerik</h3>
                         <p class="ac-excerpt">Tinjauan mendalam mengenai perilaku struktur rangka dan analisis respons nonlinier di bawah pembebanan dinamis serta pengujian analitis.</p>
                         <div class="ac-meta"><span>15 Menit Baca</span><span>Baca &#8594;</span></div>
                     </article>
-                    <article class="glass-card article-card" data-category="Catatan" onclick="openArticle(2)">
+
+                    <!-- Artikel 2 -->
+                    <article class="glass-card article-card" data-category="procurement" onclick="openArticle(2)">
+                        <div style="margin-bottom: 8px;"><span class="ac-cat cat-procurement">Pengadaan</span></div>
+                        <h3>Manajemen Keputusan Berbasis Multi-Criteria Decision Analysis</h3>
+                        <p class="ac-excerpt">Penerapan kerangka Analytical Hierarchy Process (AHP) dalam evaluasi kelayakan teknis dan pengadaan barang/jasa infrastruktur.</p>
+                        <div class="ac-meta"><span>10 Menit Baca</span><span>Baca &#8594;</span></div>
+                    </article>
+
+                    <!-- Artikel 3 -->
+                    <article class="glass-card article-card" data-category="media" onclick="openArticle(3)">
+                        <div style="margin-bottom: 8px;"><span class="ac-cat cat-media">Media & Riset</span></div>
+                        <h3>Strategi Diseminasi dan Publikasi Jurnal Bereputasi</h3>
+                        <p class="ac-excerpt">Langkah-langkah menyusun manuskrip ilmiah yang komprehensif, dari validasi data laboratorium hingga proses peer-review.</p>
+                        <div class="ac-meta"><span>8 Menit Baca</span><span>Baca &#8594;</span></div>
+                    </article>
+
+                    <!-- Artikel 4 -->
+                    <article class="glass-card article-card" data-category="chronicles" onclick="openArticle(4)">
+                        <div style="margin-bottom: 8px;"><span class="ac-cat cat-chronicles">Catatan</span></div>
                         <h3>Automasi Analisis Data Menggunakan Pemrograman Skrip Modern</h3>
                         <p class="ac-excerpt">Eksplorasi efisiensi pengolahan data siklus uji menggunakan integrasi pustaka komputasi numerik secara terstruktur.</p>
                         <div class="ac-meta"><span>12 Menit Baca</span><span>Baca &#8594;</span></div>
@@ -492,27 +529,49 @@
         <section class="slide s-detail" id="slide-1">
             <div class="slide-inner">
                 <div class="detail-content reveal">
-                    <div class="back-row" onclick="goToSlide(0)">&#8592; Kembali ke Daftar</div>
+                    <div class="back-row" onclick="goToSlide(0)">&#8592; Kembali ke Daftar Artikel</div>
+                    <div style="margin-top: 24px;"><span class="ac-cat" id="detailCat" style="background: rgba(99, 102, 241, .12); border: 1px solid rgba(99, 102, 241, .15); color: var(--indigo-soft);">Kategori</span></div>
                     <h1 id="detailTitle">Judul Artikel</h1>
-                    <div id="detailDate">Dipublikasikan pada 2026</div>
+                    <div id="detailDate" style="color: var(--ink-3); font-size: 13px;">Dipublikasikan pada 2026</div>
                     <div class="dc-body" id="detailBody"></div>
+                    
+                    <div class="share-row">
+                        <span style="font-size: 13px; color: var(--ink-3);">Bagikan:</span>
+                        <a href="#" id="shareWa" class="share-btn" target="_blank" style="color: var(--green);">WhatsApp</a>
+                        <a href="#" id="shareMail" class="share-btn" style="color: var(--indigo-soft);">Email</a>
+                    </div>
                 </div>
             </div>
         </section>
     </div>
 
-    <!-- SCRIPT (Sudah diperbaiki) -->
+    <!-- SCRIPT UTAMA -->
     <script>
+        // DATA ARTIKEL ASLI ANDA KEMBALI SEUTUHNYA
         const articlesData = {
             1: {
+                category: "Teknik Sipil",
                 title: "Validasi Kapasitas Struktur Menggunakan Pendekatan Model Numerik",
                 date: "2026 • 15 Menit Baca",
-                content: "<p>Pendekatan numerik memungkinkan simulasi respons inelastis secara presisi sebelum dibandingkan dengan hasil pengujian fisik di laboratorium. Integrasi antara kekakuan awal dan kurva histeresis menjadi parameter kunci dalam memvalidasi keandalan model.</p>"
+                content: "<p>Evaluasi terhadap kapasitas lateral struktur memerlukan pemodelan analitis yang akurat guna menangkap fenomena degradasi kekuatan dan kekakuan pada elemen penahan beban.</p><h2>Metodologi & Pengujian</h2><p>Pendekatan numerik memungkinkan simulasi respons inelastis secara presisi sebelum dibandingkan dengan hasil pengujian fisik di laboratorium. Integrasi antara kekakuan awal dan kurva histeresis menjadi parameter kunci dalam memvalidasi keandalan model.</p><blockquote style='border-left: 3px solid #6366f1; padding-left: 20px; font-style: italic; margin: 20px 0;'>\"Akurasi model komputasi sangat bergantung pada kalibrasi parameter material dan ketepatan penetapan kondisi batas batas elemen.\"</blockquote><p>Dengan memadukan data eksperimental dan formulasi teoretis, analisis keruntuhan dapat diprediksi secara lebih komprehensif.</p>"
             },
             2: {
+                category: "Pengadaan",
+                title: "Manajemen Keputusan Berbasis Multi-Criteria Decision Analysis",
+                date: "2026 • 10 Menit Baca",
+                content: "<p>Pengambilan keputusan multikriteria (MCDA) memegang peranan krusial dalam memilih alternatif perkuatan atau pengadaan metode konstruksi yang paling efektif.</p><h2>Penerapan Matriks Perbandingan Berpasangan</h2><p>Melalui pembobotan sistematis pada aspek biaya, durasi, kemudahan pelaksanaan, dan dampak struktural, pengambil keputusan dapat meminimalkan bias subjektif.</p><ul style='margin-left: 24px; margin-bottom: 20px;'><li>Identifikasi kriteria utama dan sub-kriteria.</li><li>Penyusunan matriks perbandingan berpasangan (AHP).</li><li>Pemeriksaan rasio konsistensi (CR &lt; 0.10).</li></ul>"
+            },
+            3: {
+                category: "Media & Riset",
+                title: "Strategi Diseminasi dan Publikasi Jurnal Bereputasi",
+                date: "2026 • 8 Menit Baca",
+                content: "<p>Menyusun artikel ilmiah untuk jurnal bereputasi tinggi menuntut penyajian data yang valid, analisis yang mendalam, serta alur narasi yang terstruktur dengan baik.</p><h2>Kunci Keberhasilan Penulisan Ilmiah</h2><p>Fokus utama harus diletakkan pada kontribusi kebaruan (novelty), metodologi yang dapat direplikasi, dan pembahasan hasil yang didukung oleh referensi mutakhir.</p>"
+            },
+            4: {
+                category: "Catatan",
                 title: "Automasi Analisis Data Menggunakan Pemrograman Skrip Modern",
                 date: "2026 • 12 Menit Baca",
-                content: "<p>Pengolahan data hasil uji eksperimental berskala besar dapat disederhanakan secara signifikan menggunakan skrip otomasi komputasi numerik.</p>"
+                content: "<p>Pengolahan data hasil uji eksperimental berskala besar dapat disederhanakan secara signifikan menggunakan skrip otomasi komputasi numerik.</p><h2>Efisiensi & Pemrosesan</h2><p>Dengan menyusun fungsi pemrosesan data mandiri, ekstraksi parameter seperti disipasi energi, kekakuan efektif, dan drift rasio dapat dilakukan secara instan tanpa kesalahan manual.</p>"
             }
         };
 
@@ -521,7 +580,7 @@
         const sectionLabels = ["Daftar Artikel", "Detail Artikel"];
 
         function updateSlideUI() {
-            document.querySelectorAll('.slide').forEach((slide, idx) => {
+            document.querySelectorAll('.slide').forEach(function(slide, idx) {
                 if (idx === currentSlide) {
                     slide.classList.remove('exiting');
                     slide.classList.add('active');
@@ -531,11 +590,16 @@
                 }
             });
 
-            document.getElementById('slideCounter').innerText = `0${currentSlide + 1} / 0${totalSlides}`;
+            // Menggunakan penggabungan string biasa agar terhindar dari error parser saat copy-paste
+            document.getElementById('slideCounter').innerText = "0" + (currentSlide + 1) + " / 0" + totalSlides;
             document.getElementById('sectionLabel').innerText = sectionLabels[currentSlide];
 
-            document.querySelectorAll('.menu-item').forEach((item, idx) => {
-                item.classList.toggle('current', idx === currentSlide);
+            document.querySelectorAll('.menu-item').forEach(function(item, idx) {
+                if (idx === currentSlide) {
+                    item.classList.add('current');
+                } else {
+                    item.classList.remove('current');
+                }
             });
         }
 
@@ -558,34 +622,55 @@
         function openArticle(id) {
             const article = articlesData[id];
             if (article) {
+                document.getElementById('detailCat').innerText = article.category;
                 document.getElementById('detailTitle').innerText = article.title;
                 document.getElementById('detailDate').innerText = article.date;
                 document.getElementById('detailBody').innerHTML = article.content;
+                
+                // Konfigurasi Link Share tanpa menggunakan template literal (backticks)
+                const currentUrl = encodeURIComponent(window.location.href);
+                const titleEncoded = encodeURIComponent(article.title);
+                document.getElementById('shareWa').href = "https://api.whatsapp.com/send?text=" + titleEncoded + "%20" + currentUrl;
+                document.getElementById('shareMail').href = "mailto:?subject=" + titleEncoded + "&body=Baca%20artikel%20berikut:%20" + currentUrl;
+
                 goToSlide(1);
             }
         }
 
         function handleSearch() {
             const query = document.getElementById('searchInput').value.toLowerCase().trim();
-            document.querySelectorAll('.article-card').forEach(card => {
+            document.querySelectorAll('.article-card').forEach(function(card) {
                 const text = card.innerText.toLowerCase();
-                card.style.display = text.includes(query) ? 'flex' : 'none';
+                if (text.includes(query)) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
             });
         }
 
         function filterCategory(cat, btn) {
-            document.querySelectorAll('.filter-tabs .ft').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.filter-tabs .ft').forEach(function(b) {
+                b.classList.remove('active');
+            });
             btn.classList.add('active');
-            document.querySelectorAll('.article-card').forEach(card => {
+            
+            document.querySelectorAll('.article-card').forEach(function(card) {
                 const itemCat = card.getAttribute('data-category');
-                card.style.display = (cat === 'all' || itemCat === cat) ? 'flex' : 'none';
+                if (cat === 'all' || itemCat === cat) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
             });
         }
 
-        window.addEventListener('keydown', (e) => {
+        window.addEventListener('keydown', function(e) {
             if (e.key === 'ArrowRight') nextSlide();
             if (e.key === 'ArrowLeft') prevSlide();
-            if (e.key === 'Escape' && document.getElementById('menuPanel').classList.contains('open')) toggleMenu();
+            if (e.key === 'Escape' && document.getElementById('menuPanel').classList.contains('open')) {
+                toggleMenu();
+            }
         });
     </script>
 </body>
