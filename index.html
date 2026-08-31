@@ -974,6 +974,54 @@
             color: var(--green);
         }
 
+        /* ---- PAGINATION (tambahan) ---- */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            padding: 24px 0 8px;
+            border-top: 1px solid var(--line-2);
+            margin-top: 16px;
+        }
+        .pagination button {
+            background: rgba(255, 255, 255, .06);
+            border: 1px solid var(--glass-border);
+            color: var(--ink-2);
+            padding: 8px 16px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-family: var(--font-body);
+            font-size: 13px;
+            transition: all .25s;
+            min-width: 40px;
+        }
+        .pagination button:hover:not(:disabled) {
+            background: rgba(255, 255, 255, .14);
+            color: #fff;
+        }
+        .pagination button:disabled {
+            opacity: .3;
+            cursor: not-allowed;
+        }
+        .pagination button.active {
+            background: rgba(99, 102, 241, .25);
+            border-color: rgba(99, 102, 241, .4);
+            color: #fff;
+        }
+        .pagination .page-info {
+            font-family: var(--font-mono);
+            font-size: 12px;
+            color: var(--ink-3);
+            padding: 0 8px;
+        }
+        .pagination .page-numbers {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+        }
+
         /* ============================================================
                    RESPONSIVE
                    ============================================================ */
@@ -1060,6 +1108,17 @@
                 font-size: 13px;
                 padding: 8px 16px;
             }
+            .pagination button {
+                padding: 6px 12px;
+                font-size: 12px;
+            }
+            .pagination .page-numbers {
+                gap: 3px;
+            }
+            .pagination .page-numbers button {
+                padding: 6px 10px;
+                min-width: 32px;
+            }
         }
         @media (max-width: 480px) {
             .s-articles .header-area .top-row h2 {
@@ -1071,6 +1130,12 @@
             .share-row .share-btn {
                 font-size: 12px;
                 padding: 6px 14px;
+            }
+            .pagination {
+                gap: 4px;
+            }
+            .pagination .page-info {
+                font-size: 10px;
             }
         }
         @media (max-height: 500px) and (orientation: landscape) {
@@ -1134,6 +1199,14 @@
 
                 <!-- grid -->
                 <div class="article-grid" id="articleGrid"></div>
+
+                <!-- PAGINATION -->
+                <div class="pagination" id="pagination">
+                    <button id="prevPage">← Prev</button>
+                    <span class="page-info" id="pageInfo">Halaman 1 / 1</span>
+                    <div class="page-numbers" id="pageNumbers"></div>
+                    <button id="nextPage">Next →</button>
+                </div>
             </div>
         </section>
 
@@ -1339,7 +1412,7 @@
         }];
 
         // ================================================================
-        //  KODE INTI
+        //  KODE INTI (dengan PAGINATION 20 artikel per halaman)
         // ================================================================
 
         (function() {
@@ -1365,12 +1438,20 @@
             var searchInput = document.getElementById('searchInput');
             var searchClear = document.getElementById('searchClear');
 
+            // Elemen pagination
+            var prevPageBtn = document.getElementById('prevPage');
+            var nextPageBtn = document.getElementById('nextPage');
+            var pageInfo = document.getElementById('pageInfo');
+            var pageNumbers = document.getElementById('pageNumbers');
+
             var idx = 0,
                 isAnimating = false,
                 menuOpen = false;
             var currentFilter = 'all';
             var currentSearch = '';
-            var currentArticleId = null;
+            var currentPage = 1;
+            var itemsPerPage = 20;
+            var filteredArticles = [];
 
             totalEl.textContent = String(slides.length).padStart(2, '0');
             menuTotalEl.textContent = String(slides.length).padStart(2, '0');
@@ -1396,68 +1477,124 @@
                         el.classList.toggle('current', i === idx);
                     });
                     if (t === 0) {
-                        renderGrid(currentFilter, currentSearch);
+                        applyFiltersAndRender();
                     }
                     setTimeout(function() { isAnimating = false }, 900);
                 }, 350);
             }
 
-            // ---- render grid dengan filter + search ----
-            function renderGrid(filter, searchTerm) {
-                var filtered = ARTICLES.filter(function(a) {
-                    var matchCategory = (filter === 'all' || a.category === filter);
+            // ---- fungsi filter & render dengan pagination ----
+            function applyFiltersAndRender() {
+                var searchTerm = currentSearch.trim().toLowerCase();
+                filteredArticles = ARTICLES.filter(function(a) {
+                    var matchCat = (currentFilter === 'all' || a.category === currentFilter);
                     var matchSearch = true;
-                    if (searchTerm && searchTerm.trim() !== '') {
-                        var term = searchTerm.trim().toLowerCase();
-                        matchSearch = a.title.toLowerCase().includes(term) ||
-                            a.excerpt.toLowerCase().includes(term) ||
-                            a.content.toLowerCase().includes(term);
+                    if (searchTerm) {
+                        matchSearch = a.title.toLowerCase().includes(searchTerm) ||
+                            a.excerpt.toLowerCase().includes(searchTerm) ||
+                            a.content.toLowerCase().includes(searchTerm);
                     }
-                    return matchCategory && matchSearch;
+                    return matchCat && matchSearch;
                 });
-                articleCount.textContent = filtered.length + ' artikel';
+                currentPage = 1;
+                renderPage(currentPage);
+            }
 
-                if (filtered.length === 0) {
+            function renderPage(page) {
+                var totalItems = filteredArticles.length;
+                var totalPages = Math.ceil(totalItems / itemsPerPage) || 1;
+                if (page < 1) page = 1;
+                if (page > totalPages) page = totalPages;
+                currentPage = page;
+
+                var start = (page - 1) * itemsPerPage;
+                var end = Math.min(start + itemsPerPage, totalItems);
+                var pageItems = filteredArticles.slice(start, end);
+
+                articleCount.textContent = totalItems + ' artikel';
+
+                if (totalItems === 0) {
                     grid.innerHTML =
                         '<div class="empty-state"><div class="empty-icon">🔍</div><p>Tidak ditemukan artikel yang cocok.</p></div>';
-                    return;
+                } else {
+                    var html = '';
+                    pageItems.forEach(function(a) {
+                        var catClass = '';
+                        if (a.category === 'Procurement') catClass = 'cat-procurement';
+                        else if (a.category === 'Civil Engineering / Building Technology') catClass = 'cat-civil';
+                        else if (a.category === 'News and Media Assessment') catClass = 'cat-media';
+                        else if (a.category === 'Agung\'s Chronicles') catClass = 'cat-chronicles';
+
+                        html += `
+                            <div class="article-card glass-card reveal" data-id="${a.id}">
+                                <div class="ac-top">
+                                    <div class="ac-icon">${a.icon || '📄'}</div>
+                                    <span class="ac-cat ${catClass}">${a.category}</span>
+                                </div>
+                                <h3>${a.title}</h3>
+                                <div class="ac-excerpt">${a.excerpt}</div>
+                                <div class="ac-meta">
+                                    <span>${a.date || ''}</span>
+                                    <span class="ac-read">Baca selengkapnya →</span>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    grid.innerHTML = html;
+
+                    grid.querySelectorAll('.article-card').forEach(function(card) {
+                        card.addEventListener('click', function() {
+                            var id = parseInt(this.dataset.id, 10);
+                            openDetail(id);
+                        });
+                    });
+
+                    grid.querySelectorAll('.reveal').forEach(function(el, i) {
+                        el.style.transitionDelay = (0.4 + i * 0.08) + 's';
+                    });
+                }
+
+                // Update pagination UI
+                renderPagination(totalPages);
+            }
+
+            function renderPagination(totalPages) {
+                // Update tombol prev/next
+                prevPageBtn.disabled = (currentPage <= 1);
+                nextPageBtn.disabled = (currentPage >= totalPages);
+                pageInfo.textContent = 'Halaman ' + currentPage + ' / ' + totalPages;
+
+                // Buat tombol angka halaman
+                var maxVisible = 7;
+                var startPage = Math.max(1, currentPage - Math.floor(maxVisible / 2));
+                var endPage = Math.min(totalPages, startPage + maxVisible - 1);
+                if (endPage - startPage < maxVisible - 1) {
+                    startPage = Math.max(1, endPage - maxVisible + 1);
                 }
 
                 var html = '';
-                filtered.forEach(function(a) {
-                    var catClass = '';
-                    if (a.category === 'Procurement') catClass = 'cat-procurement';
-                    else if (a.category === 'Civil Engineering / Building Technology') catClass = 'cat-civil';
-                    else if (a.category === 'News and Media Assessment') catClass = 'cat-media';
-                    else if (a.category === 'Agung\'s Chronicles') catClass = 'cat-chronicles';
+                if (startPage > 1) {
+                    html += '<button data-page="1">1</button>';
+                    if (startPage > 2) html += '<span style="color:var(--ink-4);padding:0 4px;">…</span>';
+                }
+                for (var p = startPage; p <= endPage; p++) {
+                    var activeClass = (p === currentPage) ? 'active' : '';
+                    html += '<button data-page="' + p + '" class="' + activeClass + '">' + p + '</button>';
+                }
+                if (endPage < totalPages) {
+                    if (endPage < totalPages - 1) html += '<span style="color:var(--ink-4);padding:0 4px;">…</span>';
+                    html += '<button data-page="' + totalPages + '">' + totalPages + '</button>';
+                }
+                pageNumbers.innerHTML = html;
 
-                    html += `
-                        <div class="article-card glass-card reveal" data-id="${a.id}">
-                            <div class="ac-top">
-                                <div class="ac-icon">${a.icon || '📄'}</div>
-                                <span class="ac-cat ${catClass}">${a.category}</span>
-                            </div>
-                            <h3>${a.title}</h3>
-                            <div class="ac-excerpt">${a.excerpt}</div>
-                            <div class="ac-meta">
-                                <span>${a.date || ''}</span>
-                                <span class="ac-read">Baca selengkapnya →</span>
-                            </div>
-                        </div>
-                    `;
-                });
-                grid.innerHTML = html;
-
-                grid.querySelectorAll('.article-card').forEach(function(card) {
-                    card.addEventListener('click', function() {
-                        var id = parseInt(this.dataset.id, 10);
-                        openDetail(id);
+                // Event listener untuk tombol angka
+                pageNumbers.querySelectorAll('button[data-page]').forEach(function(btn) {
+                    btn.addEventListener('click', function() {
+                        var page = parseInt(this.dataset.page, 10);
+                        if (page !== currentPage) {
+                            renderPage(page);
+                        }
                     });
-                });
-
-                // trigger reveal
-                grid.querySelectorAll('.reveal').forEach(function(el, i) {
-                    el.style.transitionDelay = (0.4 + i * 0.08) + 's';
                 });
             }
 
@@ -1465,7 +1602,6 @@
             function openDetail(id) {
                 var article = ARTICLES.find(function(a) { return a.id === id; });
                 if (!article) return;
-                currentArticleId = id;
                 renderDetail(article);
                 go(1);
             }
@@ -1477,7 +1613,6 @@
                 else if (article.category === 'News and Media Assessment') catClass = 'cat-media';
                 else if (article.category === 'Agung\'s Chronicles') catClass = 'cat-chronicles';
 
-                // Buat link untuk sharing
                 var shareUrl = window.location.href.split('?')[0] + '?article=' + article.id;
                 var shareText = encodeURIComponent(article.title + ' — ' + article.excerpt + '  Baca selengkapnya di: ' +
                     shareUrl);
@@ -1513,7 +1648,7 @@
                 btn.classList.add('active');
                 currentFilter = btn.dataset.filter;
                 if (idx === 0) {
-                    renderGrid(currentFilter, currentSearch);
+                    applyFiltersAndRender();
                 }
             });
 
@@ -1527,7 +1662,7 @@
                     searchClear.classList.add('visible');
                 }
                 if (idx === 0) {
-                    renderGrid(currentFilter, currentSearch);
+                    applyFiltersAndRender();
                 }
             }
 
@@ -1536,6 +1671,15 @@
                 searchInput.value = '';
                 handleSearch();
                 searchInput.focus();
+            });
+
+            // ---- pagination events ----
+            prevPageBtn.addEventListener('click', function() {
+                if (currentPage > 1) renderPage(currentPage - 1);
+            });
+            nextPageBtn.addEventListener('click', function() {
+                var totalPages = Math.ceil(filteredArticles.length / itemsPerPage) || 1;
+                if (currentPage < totalPages) renderPage(currentPage + 1);
             });
 
             // ---- back to list ----
@@ -1610,23 +1754,21 @@
                 if (Math.abs(dx) > 60 && dy < 40) dx < 0 ? go(idx + 1) : go(idx - 1);
             }, { passive: true });
 
-            // ---- cek parameter URL untuk artikel langsung ----
+            // ---- inisialisasi ----
             (function() {
                 var params = new URLSearchParams(window.location.search);
                 var articleId = params.get('article');
                 if (articleId) {
                     var id = parseInt(articleId, 10);
                     if (!isNaN(id) && ARTICLES.some(function(a) { return a.id === id; })) {
-                        // render daftar dulu, lalu buka detail
-                        renderGrid('all', '');
+                        applyFiltersAndRender();
                         openDetail(id);
                     }
                 } else {
-                    renderGrid('all', '');
+                    applyFiltersAndRender();
                 }
             })();
 
-            // ---- inisialisasi menu ----
             menuItems.forEach(function(el, i) {
                 el.classList.toggle('current', i === 0);
             });
