@@ -9,7 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=DM+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
     <style>
         /* ============================================================
-                   ROOT & RESET — tetap sama seperti tema awal
+                   ROOT & RESET
                    ============================================================ */
         :root {
             --ee: cubic-bezier(0.19, 1, 0.22, 1);
@@ -61,7 +61,6 @@
             overflow: hidden;
         }
 
-        /* ----- latar belakang & grid ----- */
         .deck::before {
             content: '';
             position: fixed;
@@ -100,7 +99,6 @@
             overflow: hidden;
         }
 
-        /* ----- slide ----- */
         .slide {
             position: absolute;
             inset: 0;
@@ -140,20 +138,17 @@
         .slide.exiting {
             transition-delay: 0s;
         }
+
         .slide-inner {
             min-height: 100%;
-            padding: 90px 6vmin 80px;
+            padding: 80px 6vmin 80px;
             display: flex;
             flex-direction: column;
             position: relative;
         }
 
-        /* ----- brand & nav (tetap) ----- */
+        /* ----- BRAND (sekarang mengikuti scroll) ----- */
         .brand {
-            position: fixed;
-            top: 28px;
-            left: 32px;
-            z-index: 100;
             display: flex;
             align-items: center;
             gap: 11px;
@@ -161,6 +156,15 @@
             font-size: 16px;
             letter-spacing: -.01em;
             cursor: pointer;
+            background: var(--bg);
+            padding: 8px 16px 8px 12px;
+            border-radius: 40px;
+            border: 1px solid rgba(255, 255, 255, .06);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, .4);
+            margin: 0 0 16px 0;
+            align-self: flex-start;
         }
         .brand .logo {
             width: 28px;
@@ -177,19 +181,25 @@
             background: var(--bg);
             border-radius: 4px;
         }
-        .brand .slash {
-            color: var(--indigo-soft);
-        }
 
+        /* ----- NAV (mengikuti scroll) ----- */
         .nav {
-            position: fixed;
-            top: 24px;
-            right: 24px;
             display: flex;
             gap: 6px;
             align-items: center;
-            z-index: 100;
             font-family: var(--font-mono);
+            background: var(--bg);
+            padding: 6px 10px;
+            border-radius: 40px;
+            border: 1px solid rgba(255, 255, 255, .06);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, .4);
+            align-self: flex-end;
+            margin-top: -56px; /* geser ke atas agar sejajar dengan brand */
+            margin-bottom: 16px;
+            position: relative;
+            z-index: 10;
         }
         .nav button {
             background: rgba(255, 255, 255, .1);
@@ -229,11 +239,8 @@
             -webkit-backdrop-filter: blur(20px);
         }
 
+        /* ----- SECTION TAG (mengikuti scroll) ----- */
         .section-tag {
-            position: fixed;
-            bottom: 28px;
-            left: 32px;
-            z-index: 100;
             font-family: var(--font-mono);
             font-size: 10px;
             letter-spacing: .25em;
@@ -243,6 +250,15 @@
             gap: 10px;
             align-items: center;
             pointer-events: none;
+            background: var(--bg);
+            padding: 6px 16px 6px 14px;
+            border-radius: 40px;
+            border: 1px solid rgba(255, 255, 255, .06);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, .2);
+            margin: 32px 0 0 0;
+            align-self: flex-start;
         }
         .section-tag .pip {
             width: 5px;
@@ -253,13 +269,8 @@
             animation: pip 2s infinite;
         }
         @keyframes pip {
-            0%,
-            100% {
-                opacity: 1;
-            }
-            50% {
-                opacity: .3;
-            }
+            0%, 100% { opacity: 1; }
+            50% { opacity: .3; }
         }
 
         /* ----- menu button (hamburger) ----- */
@@ -288,7 +299,7 @@
             transform: translateY(-4.5px) rotate(-45deg);
         }
 
-        /* ----- menu overlay & panel ----- */
+        /* ----- menu overlay & panel (tidak berubah) ----- */
         .menu-overlay {
             position: fixed;
             inset: 0;
@@ -460,21 +471,11 @@
             opacity: 1;
             transform: translateY(0);
         }
-        .slide.active .reveal:nth-of-type(1) {
-            transition-delay: .5s;
-        }
-        .slide.active .reveal:nth-of-type(2) {
-            transition-delay: .65s;
-        }
-        .slide.active .reveal:nth-of-type(3) {
-            transition-delay: .8s;
-        }
-        .slide.active .reveal:nth-of-type(4) {
-            transition-delay: .95s;
-        }
-        .slide.active .reveal:nth-of-type(5) {
-            transition-delay: 1.1s;
-        }
+        .slide.active .reveal:nth-of-type(1) { transition-delay: .5s; }
+        .slide.active .reveal:nth-of-type(2) { transition-delay: .65s; }
+        .slide.active .reveal:nth-of-type(3) { transition-delay: .8s; }
+        .slide.active .reveal:nth-of-type(4) { transition-delay: .95s; }
+        .slide.active .reveal:nth-of-type(5) { transition-delay: 1.1s; }
 
         .eyebrow {
             display: inline-flex;
@@ -518,18 +519,6 @@
             line-height: 1.6;
             color: var(--ink-2);
             font-weight: 400;
-        }
-        .body-md {
-            font-family: var(--font-body);
-            font-size: 14px;
-            line-height: 1.6;
-            color: var(--ink-2);
-        }
-        .body-sm {
-            font-family: var(--font-body);
-            font-size: 12px;
-            line-height: 1.5;
-            color: var(--ink-3);
         }
 
         .btn-primary {
@@ -585,11 +574,9 @@
             overflow: hidden;
         }
 
-        /* ============================================================
-                   SLIDE UTAMA — DAFTAR ARTIKEL
-                   ============================================================ */
+        /* ===== SLIDE UTAMA ===== */
         .s-articles {
-            padding: 90px 6vmin 80px;
+            padding: 20px 6vmin 80px;
             gap: 32px;
         }
         .s-articles .header-area {
@@ -620,7 +607,6 @@
             white-space: nowrap;
         }
 
-        /* ---- search bar ---- */
         .search-row {
             display: flex;
             gap: 12px;
@@ -668,7 +654,6 @@
             color: var(--ink);
         }
 
-        /* ---- filter tabs ---- */
         .filter-tabs {
             display: flex;
             flex-wrap: wrap;
@@ -700,7 +685,6 @@
             box-shadow: 0 0 20px rgba(99, 102, 241, .1);
         }
 
-        /* ---- grid artikel ---- */
         .article-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -816,7 +800,6 @@
             color: #fff;
         }
 
-        /* ---- kosong ---- */
         .empty-state {
             grid-column: 1 / -1;
             text-align: center;
@@ -830,11 +813,9 @@
             opacity: .5;
         }
 
-        /* ============================================================
-                   SLIDE DETAIL ARTIKEL
-                   ============================================================ */
+        /* ===== SLIDE DETAIL ===== */
         .s-detail {
-            padding: 90px 6vmin 80px;
+            padding: 20px 6vmin 80px;
             gap: 28px;
         }
         .s-detail .back-row {
@@ -929,7 +910,6 @@
             margin: 20px 0;
         }
 
-        /* ---- tombol share di detail ---- */
         .share-row {
             display: flex;
             gap: 12px;
@@ -974,7 +954,7 @@
             color: var(--green);
         }
 
-        /* ---- PAGINATION (tambahan) ---- */
+        /* ===== PAGINATION ===== */
         .pagination {
             display: flex;
             justify-content: center;
@@ -1022,9 +1002,7 @@
             flex-wrap: wrap;
         }
 
-        /* ============================================================
-                   RESPONSIVE
-                   ============================================================ */
+        /* ===== RESPONSIVE ===== */
         @media (max-width: 768px) {
             .article-grid {
                 grid-template-columns: 1fr;
@@ -1042,21 +1020,21 @@
             }
             .s-articles,
             .s-detail {
-                padding: 72px 18px 24px;
+                padding: 20px 18px 24px;
             }
             .brand {
-                top: 18px;
-                left: 18px;
                 font-size: 14px;
+                padding: 6px 12px 6px 10px;
+                margin-bottom: 12px;
             }
             .brand .logo {
                 width: 24px;
                 height: 24px;
             }
             .nav {
-                top: 16px;
-                right: 16px;
-                gap: 5px;
+                padding: 4px 8px;
+                gap: 4px;
+                margin-top: -48px;
             }
             .nav button {
                 width: 32px;
@@ -1070,9 +1048,9 @@
                 min-width: 54px;
             }
             .section-tag {
-                bottom: 16px;
-                left: 18px;
                 font-size: 9px;
+                padding: 4px 12px 4px 10px;
+                margin-top: 24px;
             }
             .menu-panel {
                 width: 94vw;
@@ -1141,32 +1119,12 @@
         @media (max-height: 500px) and (orientation: landscape) {
             .s-articles,
             .s-detail {
-                padding: 60px 28px 40px;
-            }
-            .nav {
-                top: 12px;
-                right: 12px;
-            }
-            .brand {
-                top: 12px;
-                left: 14px;
-            }
-            .section-tag {
-                bottom: 12px;
-                left: 14px;
+                padding: 20px 28px 40px;
             }
         }
     </style>
 </head>
 <body>
-
-    <!-- ========== BRAND ========== -->
-    <div class="brand" id="brandHome">
-        <span class="logo"></span> Agung Mardhika's Page
-    </div>
-
-    <!-- ========== SECTION TAG ========== -->
-    <div class="section-tag"><span class="pip"></span><span id="sectionName">Artikel</span></div>
 
     <!-- ========== DECK ========== -->
     <div class="deck" id="deck">
@@ -1174,20 +1132,37 @@
         <!-- ===== SLIDE 0 — DAFTAR ARTIKEL ===== -->
         <section class="slide active" data-section="Artikel" id="slideList">
             <div class="slide-inner s-articles">
-                <!-- header -->
+
+                <!-- BRAND (sekarang di dalam slide, ikut scroll) -->
+                <div class="brand" id="brandHome">
+                    <span class="logo"></span> Agung Mardhika's Page
+                </div>
+
+                <!-- NAV (juga di dalam slide) -->
+                <div class="nav">
+                    <button id="prev" aria-label="Previous">←</button>
+                    <button id="menuBtn" class="menu-btn" aria-label="Menu">
+                        <span class="icon"><i></i><i></i><i></i></span>
+                    </button>
+                    <div class="counter"><span id="curr">01</span> / <span id="total">02</span></div>
+                    <button id="next" aria-label="Next">→</button>
+                </div>
+
+                <!-- SECTION TAG -->
+                <div class="section-tag">
+                    <span class="pip"></span><span id="sectionName">Artikel</span>
+                </div>
+
+                <!-- KONTEN UTAMA -->
                 <div class="header-area reveal">
                     <div class="top-row">
                         <h2 class="h-display">Catatan &amp; <span class="grd">Wawasan</span></h2>
                         <span class="article-count" id="articleCount">0 artikel</span>
                     </div>
-
-                    <!-- search bar -->
                     <div class="search-row">
                         <input type="text" class="search-input" id="searchInput" placeholder="Cari judul atau isi artikel..." />
                         <button class="search-clear" id="searchClear" aria-label="Hapus pencarian">✕</button>
                     </div>
-
-                    <!-- filter tabs -->
                     <div class="filter-tabs" id="filterTabs">
                         <button class="ft active" data-filter="all">Halaman Utama</button>
                         <button class="ft" data-filter="Procurement">Procurement</button>
@@ -1196,11 +1171,7 @@
                         <button class="ft" data-filter="Agung's Chronicles">Road Map → Agung's Chronicles</button>
                     </div>
                 </div>
-
-                <!-- grid -->
                 <div class="article-grid" id="articleGrid"></div>
-
-                <!-- PAGINATION -->
                 <div class="pagination" id="pagination">
                     <button id="prevPage">← Prev</button>
                     <span class="page-info" id="pageInfo">Halaman 1 / 1</span>
@@ -1213,18 +1184,38 @@
         <!-- ===== SLIDE 1 — DETAIL ARTIKEL ===== -->
         <section class="slide" data-section="Detail Artikel" id="slideDetail">
             <div class="slide-inner s-detail">
+
+                <!-- BRAND (diulang di slide detail) -->
+                <div class="brand" id="brandHome2">
+                    <span class="logo"></span> Agung Mardhika's Page
+                </div>
+
+                <!-- NAV -->
+                <div class="nav">
+                    <button id="prev2" aria-label="Previous">←</button>
+                    <button id="menuBtn2" class="menu-btn" aria-label="Menu">
+                        <span class="icon"><i></i><i></i><i></i></span>
+                    </button>
+                    <div class="counter"><span id="curr2">01</span> / <span id="total2">02</span></div>
+                    <button id="next2" aria-label="Next">→</button>
+                </div>
+
+                <!-- SECTION TAG -->
+                <div class="section-tag">
+                    <span class="pip"></span><span id="sectionName2">Detail Artikel</span>
+                </div>
+
+                <!-- KONTEN DETAIL -->
                 <div class="back-row reveal" id="backToList">
                     <span class="br-arrow">←</span> Kembali ke daftar
                 </div>
-                <div class="detail-content reveal" id="detailContent">
-                    <!-- diisi oleh JS -->
-                </div>
+                <div class="detail-content reveal" id="detailContent"></div>
             </div>
         </section>
 
     </div>
 
-    <!-- ========== MENU ========== -->
+    <!-- ========== MENU (overlay) ========== -->
     <div class="menu-overlay" id="menuOverlay"></div>
     <div class="menu-panel" id="menuPanel" role="dialog" aria-label="Navigasi">
         <div class="menu-header">
@@ -1249,17 +1240,9 @@
         </div>
     </div>
 
-    <!-- ========== NAV ========== -->
-    <div class="nav">
-        <button id="prev" aria-label="Previous">←</button>
-        <button id="menuBtn" class="menu-btn" aria-label="Menu"><span class="icon"><i></i><i></i><i></i></span></button>
-        <div class="counter"><span id="curr">01</span> / <span id="total">02</span></div>
-        <button id="next" aria-label="Next">→</button>
-    </div>
-
     <script>
         // ================================================================
-        //  “ISI” ARTIKEL — tambahkan / ubah / hapus di sini
+        //  “ISI” ARTIKEL — 8 contoh artikel
         // ================================================================
         var ARTICLES = [{
             id: 1,
@@ -1416,7 +1399,22 @@
         // ================================================================
 
         (function() {
+            // Ambil semua elemen yang dibutuhkan
             var slides = document.querySelectorAll('.slide');
+            var grid = document.getElementById('articleGrid');
+            var filterTabs = document.getElementById('filterTabs');
+            var detailContent = document.getElementById('detailContent');
+            var backBtn = document.getElementById('backToList');
+            var brandHome = document.getElementById('brandHome');
+            var articleCount = document.getElementById('articleCount');
+            var searchInput = document.getElementById('searchInput');
+            var searchClear = document.getElementById('searchClear');
+            var prevPageBtn = document.getElementById('prevPage');
+            var nextPageBtn = document.getElementById('nextPage');
+            var pageInfo = document.getElementById('pageInfo');
+            var pageNumbers = document.getElementById('pageNumbers');
+
+            // Elemen counter dan menu (slide navigasi)
             var currEl = document.getElementById('curr');
             var totalEl = document.getElementById('total');
             var menuCurrEl = document.getElementById('menuCurr');
@@ -1429,20 +1427,6 @@
             var menuPanel = document.getElementById('menuPanel');
             var menuList = document.getElementById('menuList');
             var menuItems = menuList.querySelectorAll('.menu-item');
-            var grid = document.getElementById('articleGrid');
-            var filterTabs = document.getElementById('filterTabs');
-            var detailContent = document.getElementById('detailContent');
-            var backBtn = document.getElementById('backToList');
-            var brandHome = document.getElementById('brandHome');
-            var articleCount = document.getElementById('articleCount');
-            var searchInput = document.getElementById('searchInput');
-            var searchClear = document.getElementById('searchClear');
-
-            // Elemen pagination
-            var prevPageBtn = document.getElementById('prevPage');
-            var nextPageBtn = document.getElementById('nextPage');
-            var pageInfo = document.getElementById('pageInfo');
-            var pageNumbers = document.getElementById('pageNumbers');
 
             var idx = 0,
                 isAnimating = false,
@@ -1457,7 +1441,7 @@
             menuTotalEl.textContent = String(slides.length).padStart(2, '0');
 
             // ---- navigasi slide ----
-            function go(t, pushState) {
+            function go(t) {
                 if (isAnimating || t === idx || t < 0 || t >= slides.length) return;
                 isAnimating = true;
                 var old = slides[idx],
@@ -1476,14 +1460,12 @@
                     menuItems.forEach(function(el, i) {
                         el.classList.toggle('current', i === idx);
                     });
-                    if (t === 0) {
-                        applyFiltersAndRender();
-                    }
+                    if (t === 0) applyFiltersAndRender();
                     setTimeout(function() { isAnimating = false }, 900);
                 }, 350);
             }
 
-            // ---- fungsi filter & render dengan pagination ----
+            // ---- filter & render ----
             function applyFiltersAndRender() {
                 var searchTerm = currentSearch.trim().toLowerCase();
                 filteredArticles = ARTICLES.filter(function(a) {
@@ -1554,17 +1536,14 @@
                     });
                 }
 
-                // Update pagination UI
                 renderPagination(totalPages);
             }
 
             function renderPagination(totalPages) {
-                // Update tombol prev/next
                 prevPageBtn.disabled = (currentPage <= 1);
                 nextPageBtn.disabled = (currentPage >= totalPages);
                 pageInfo.textContent = 'Halaman ' + currentPage + ' / ' + totalPages;
 
-                // Buat tombol angka halaman
                 var maxVisible = 7;
                 var startPage = Math.max(1, currentPage - Math.floor(maxVisible / 2));
                 var endPage = Math.min(totalPages, startPage + maxVisible - 1);
@@ -1587,7 +1566,6 @@
                 }
                 pageNumbers.innerHTML = html;
 
-                // Event listener untuk tombol angka
                 pageNumbers.querySelectorAll('button[data-page]').forEach(function(btn) {
                     btn.addEventListener('click', function() {
                         var page = parseInt(this.dataset.page, 10);
@@ -1640,32 +1618,23 @@
                 if (slide) slide.scrollTop = 0;
             }
 
-            // ---- filter tabs ----
+            // ---- event listeners ----
             filterTabs.addEventListener('click', function(e) {
                 var btn = e.target.closest('.ft');
                 if (!btn) return;
                 filterTabs.querySelectorAll('.ft').forEach(function(b) { b.classList.remove('active'); });
                 btn.classList.add('active');
                 currentFilter = btn.dataset.filter;
-                if (idx === 0) {
-                    applyFiltersAndRender();
-                }
+                if (idx === 0) applyFiltersAndRender();
             });
 
-            // ---- search ----
             function handleSearch() {
                 var term = searchInput.value;
                 currentSearch = term;
-                if (term.trim() === '') {
-                    searchClear.classList.remove('visible');
-                } else {
-                    searchClear.classList.add('visible');
-                }
-                if (idx === 0) {
-                    applyFiltersAndRender();
-                }
+                if (term.trim() === '') searchClear.classList.remove('visible');
+                else searchClear.classList.add('visible');
+                if (idx === 0) applyFiltersAndRender();
             }
-
             searchInput.addEventListener('input', handleSearch);
             searchClear.addEventListener('click', function() {
                 searchInput.value = '';
@@ -1673,7 +1642,6 @@
                 searchInput.focus();
             });
 
-            // ---- pagination events ----
             prevPageBtn.addEventListener('click', function() {
                 if (currentPage > 1) renderPage(currentPage - 1);
             });
@@ -1682,15 +1650,8 @@
                 if (currentPage < totalPages) renderPage(currentPage + 1);
             });
 
-            // ---- back to list ----
-            backBtn.addEventListener('click', function() {
-                go(0);
-            });
-
-            // ---- brand home ----
-            brandHome.addEventListener('click', function() {
-                go(0);
-            });
+            backBtn.addEventListener('click', function() { go(0); });
+            brandHome.addEventListener('click', function() { go(0); });
 
             // ---- menu ----
             function openMenu() { menuOpen = true;
@@ -1716,11 +1677,9 @@
                 });
             });
 
-            // ---- nav buttons ----
             prevBtn.addEventListener('click', function() { go(idx - 1); });
             nextBtn.addEventListener('click', function() { go(idx + 1); });
 
-            // ---- keyboard ----
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'Escape' && menuOpen) { closeMenu(); return; }
                 if (menuOpen) return;
@@ -1733,7 +1692,6 @@
                 if (e.key === '2') go(1);
             });
 
-            // ---- touch swipe ----
             var tx = 0,
                 ty = 0,
                 scrolling = false;
